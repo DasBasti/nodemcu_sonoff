@@ -2,13 +2,16 @@
 function load_lib(fname)
     if file.open(fname .. ".lc") then
         file.close()
+        print("load: ".. fname .. ".lc")
         dofile(fname .. ".lc")
     else
+        print("load: ".. fname .. ".lua")
         dofile(fname .. ".lua")
     end
 end
 
-load_lib("config")
+load_lib("config") -- configuration vars
+load_lib("switch") -- function to switch relay
 
 local wifiReady = 0
 

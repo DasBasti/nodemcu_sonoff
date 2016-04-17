@@ -43,7 +43,7 @@ sv:listen(80,function(conn)
       local idx = string.find(pl,"\n")
       local fname = string.sub(pl, 0, idx-1)
       local ftxt = string.sub(pl, idx+1, -1)
-      load_file(fname, ftxt, true)
+      load_file(fname, ftxt, false)
     elseif string.sub(pl, 0, 12) == "**RESTART**\n" then
       print("HTTP : Restarting")
       node.restart()

@@ -1,12 +1,14 @@
 # nodemcu_sonoff
 Some nodemcu based code to run sonoff wifi enabled plugs through MQTT
 
+_This version is prepared to work with [PiDome](https://pidome.org/) MQTT plugin_
 
 
 
 * **config.lua :** as it name implies
 * **init.lua :** runs the wifi connection and launches ota and broker modules
 * **ota.lua :** web server (http) and over the air updates module
+* **switch.lua :** code to switch on the relay
 ```
 echo -e "**LOAD**\npage.tmpl" | cat -  page.tmpl | socat -u stdin TCP:ipaddress:80 -- updates the page.tmpl file on device
 echo "**RESTART**" | socat -u stdin TCP:ipaddress:80 -- restart esp8266
