@@ -2,11 +2,20 @@
 function load_lib(fname)
     if file.open(fname .. ".lc") then
         file.close()
-        print("load: ".. fname .. ".lc")
-        dofile(fname .. ".lc")
+        if pcall(function() dofile(fname .. ".lc") end) then
+            print("load: ".. fname .. ".lc")
+        else
+            print("load: ".. fname .. ".lc -- failed!")
+        end
+    elseif file.open(fname.. ".lua") then
+        file.close()
+        if pcall(function() dofile(fname .. ".lua") end) then
+            print("load: ".. fname .. ".lua")
+        else
+            print("load: ".. fname .. ".lua -- failed!")
+        end
     else
-        print("load: ".. fname .. ".lua")
-        dofile(fname .. ".lua")
+        print("load: ".. fname .. ".lua/.lc -- not found!")
     end
 end
 
