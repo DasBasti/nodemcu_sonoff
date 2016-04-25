@@ -2,17 +2,21 @@
 function load_lib(fname)
     if file.open(fname .. ".lc") then
         file.close()
-        if pcall(function() dofile(fname .. ".lc") end) then
+        local ret, err = pcall(function() dofile(fname .. ".lc") end)
+        if ret == true then
             print("load: ".. fname .. ".lc")
         else
             print("load: ".. fname .. ".lc -- failed!")
+            print(err)
         end
     elseif file.open(fname.. ".lua") then
         file.close()
-        if pcall(function() dofile(fname .. ".lua") end) then
+        local ret, err = pcall(function() dofile(fname .. ".lua") end)
+        if ret == true then
             print("load: ".. fname .. ".lua")
         else
             print("load: ".. fname .. ".lua -- failed!")
+            print(err)
         end
     else
         print("load: ".. fname .. ".lua/.lc -- not found!")
@@ -64,4 +68,5 @@ function turnWiFiLedOff()
 end
 
 -- Configure
+tmr.delay(1000)
 configureWiFi()

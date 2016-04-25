@@ -20,3 +20,4 @@ MQTT_MAINTOPIC = MQTT_PREFIX .."/".. MQTT_CLIENTID .. "/inlinesw"
 
 -- Confirmation message
 print("\nGlobal variables loaded...\n")
+print("Global variables loaded...")

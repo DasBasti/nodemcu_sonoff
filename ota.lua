@@ -1,4 +1,4 @@
-function exec_template(fname)
+local function exec_template(fname)
   file.open(fname, "r")
   local txt = {}
   
@@ -18,7 +18,7 @@ function exec_template(fname)
   return table.concat(txt, "")
 end
 
-function load_file(fname, ftxt, fcheck, cmpl)
+local function load_file(fname, ftxt, fcheck, cmpl)
   file.remove("update/" .. fname)
   file.open("update/" .. fname, "w")
   file.write(ftxt)
@@ -40,12 +40,12 @@ function load_file(fname, ftxt, fcheck, cmpl)
       end
     end
     print("Update done")
-    return true
+    return "OK"
   else
     file.close()
     file.remove("update/" .. fname)
     print("Update failed")
-    return false
+    return "NOK"
   end 
 end
 
@@ -54,32 +54,42 @@ local pl = nil;
 local sv=net.createServer(net.TCP, 10) 
 
 sv:listen(80,function(conn)
+  
+  conn:on("sent", function(conn) 
+    print("sent")
+  end)
+  
+  conn:on("disconnection", function(conn) 
+    print("disco")
+  end)
   conn:on("receive", function(conn, pl) 
     local payload = pl;
-    if string.sub(pl, 0, 9) == "**LOAD**\n"  then
+    if string.sub(pl, 0, 9) == "**LOAD**#"  then
       print("HTTP : File received...")
       pl = string.sub(pl,10,-1)
-      local idxf = string.find(pl,"\n")
+      local idxf = string.find(pl,"#")
       local fname = string.sub(pl, 0, idxf-1)
-      local idx = string.find(pl,"\n", idxf+1)
+      print("Name: " ..  fname)
+      local idx = string.find(pl,"#", idxf+1)
       local fcheck = string.sub(pl, idxf+1, idx)
       local ftxt = string.sub(pl, idx+1, -1)
       print("fcheck: " .. fcheck)
       print("ftxt: " .. string.len(ftxt))
-      if load_file(fname, ftxt, fcheck, true) then
-        conn:send("OK\n")
-      else
-        conn:send("NOK\n")
-      end
-    elseif string.sub(pl, 0, 12) == "**RESTART**\n" then
+      conn:send(load_file(fname, ftxt, fcheck, false))
+    elseif string.sub(pl, 0, 12) == "**RESTART**" then
       print("HTTP : Restarting")
       node.restart()
     else
       print("HTTP : default page")
       conn:send("HTTP/1.x 200 OK\n" .. exec_template("page.tmpl"))
     end
-    conn:close()
-    collectgarbage()
+    
+    tmr.alarm(1, 1000, 0, function() 
+        print("Heap1: " .. node.heap())
+        conn:close()
+        collectgarbage()
+        print("Heap2: " .. node.heap())
+    end )
   end)
 end)
 print("Server running...")
