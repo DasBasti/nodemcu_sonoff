@@ -68,7 +68,7 @@ tmr.alarm(0, 50, 1, function()
             BTN_PRESSED = 1
             if SWITCH_STATE==0 then
                if MQTT_CONNECTED == 1 then
-               m:publish(MQTT_MAINTOPIC .. '/state', "true", 0, 0, function(conn) 
+               m:publish(MQTT_MAINTOPIC .. '/state', "true", 0, 1, function(conn) 
                    print("sent switch on command") 
                end)
                else
@@ -76,7 +76,7 @@ tmr.alarm(0, 50, 1, function()
                end
             elseif SWITCH_STATE==1 then
                if MQTT_CONNECTED == 1 then
-               m:publish(MQTT_MAINTOPIC .. '/state', "false", 0, 0, function(conn) 
+               m:publish(MQTT_MAINTOPIC .. '/state', "false", 0, 1, function(conn) 
                    print("sent switch off command") 
                end)
                else 
